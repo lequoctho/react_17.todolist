@@ -1,13 +1,55 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import TodoApp from './components/TodoApp';
+import Task from './components/Task';
 
 class App extends Component {
+  constructor(){
+    super();
+    
+    this.state = {
+      newItem: "",
+      todoItems: [
+        {title:'Mua bim bim', isComplete: true},
+        {title:'Đi đá bóng', isComplete: true},
+        {title:'Đi đổ xăng', isComplete: false}
+      ]
+    }
+
+  }  
+
+  onClick(item) {
+    return (event) => {
+      console.log(item);
+      const isComplete = item.isComplete;
+      const { todoItems } = this.state;
+      const index = todoItems.indexOf(item);
+      this.setState({
+        todoItems: [
+          ...todoItems.slice(0,index),
+          {
+            ...item,
+            isComplete: !isComplete
+          },
+          ...todoItems.slice(index + 1)
+        ]
+      })
+    }
+  }
+
   render() {
+    const { todoItems } = this.state;
     return (
       <div className="App">
-        <TodoApp />   
+        {
+          todoItems.length > 0 && todoItems.map((item, index) => 
+            <Task 
+              key={index}
+              item={item} 
+              onClick={this.onClick(item)}/> )
+        }
+        {
+          todoItems.length === 0 && 'Nothing here'
+        }
       </div>
     );
   }
